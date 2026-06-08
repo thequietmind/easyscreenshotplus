@@ -1,16 +1,30 @@
 {
-  "name": "easyscreenshot",
-  "version": "3.109.0",
-  "description": "Easy Screenshot",
+  "name": "easy-screenshot-plus",
+  "version": "3.110.0",
+  "description": "Easy Screenshot Plus — capture, edit, and save Firefox screenshots. A community-maintained fork of Easy Screenshot.",
   "scripts": {
-    "lint": "eslint extension"
+    "lint": "eslint extension",
+    "lint:ext": "web-ext lint --source-dir extension",
+    "start": "web-ext run --source-dir extension"
   },
-  "author": "Mozilla Online Limited",
+  "author": "Quiet Mind Creative <hello@quietmindcreative.com>",
+  "contributors": [
+    "Mozilla Online Limited (original author)"
+  ],
   "license": "MPL-2.0",
-  "repository": "MozillaOnline/easyscreenshot",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thequietmind/easyscreenshotplus.git"
+  },
+  "homepage": "https://github.com/thequietmind/easyscreenshotplus#readme",
+  "bugs": {
+    "url": "https://github.com/thequietmind/easyscreenshotplus/issues"
+  },
   "devDependencies": {
-    "eslint": "3.19.0",
-    "eslint-plugin-mozilla": "0.4.4",
-    "eslint-plugin-no-unsanitized": "2.0.1"
+    "@eslint/js": "^9.0.0",
+    "eslint": "^9.0.0",
+    "eslint-plugin-no-unsanitized": "^4.0.0",
+    "globals": "^15.0.0",
+    "web-ext": "^8.0.0"
   }
 }

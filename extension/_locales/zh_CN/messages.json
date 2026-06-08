@@ -1,12 +1,12 @@
 {
   "browserActionTitle": {
-    "message": "网页截图"
+    "message": "网页截图 Plus"
   },
   "extensionDescription": {
     "message": "方便的截图工具，支持任意选定区域截图、全网页截图等多种截图方式，并提供必要的图片编辑功能。"
   },
   "extensionName": {
-    "message": "网页截图"
+    "message": "网页截图 Plus"
   },
   "feedbackUrl": {
     "message": "http://mozilla.com.cn/addon/325-easyscreenshot/"

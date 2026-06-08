@@ -1,8 +1,11 @@
 {
-  "applications": {
+  "browser_specific_settings": {
     "gecko": {
-      "id": "easyscreenshot@mozillaonline.com",
-      "strict_min_version": "82.0"
+      "id": "easy-screenshot-plus@quietmindcreative.com",
+      "strict_min_version": "82.0",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
     }
   },
   "background": {
@@ -57,7 +60,8 @@
   ],
   "default_locale": "en_US",
   "description": "__MSG_extensionDescription__",
-  "homepage_url": "http://www.firefox.com.cn/",
+  "author": "Quiet Mind Creative",
+  "homepage_url": "https://github.com/thequietmind/easyscreenshotplus",
   "icons": {
     "48": "icons/icon-48.png",
     "64": "icons/icon-64.png"
@@ -77,5 +81,5 @@
     "notifications",
     "storage"
   ],
-  "version": "3.109"
+  "version": "3.110.0"
 }

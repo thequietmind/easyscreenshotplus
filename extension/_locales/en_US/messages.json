@@ -1,12 +1,12 @@
 {
   "browserActionTitle": {
-    "message": "Easy Screenshot"
+    "message": "Easy Screenshot Plus"
   },
   "extensionDescription": {
     "message": "You can capture a screen shot by selecting an area or capture the whole/visible webpage. Then edit and save it as an image file."
   },
   "extensionName": {
-    "message": "Easy Screenshot"
+    "message": "Easy Screenshot Plus"
   },
   "feedbackUrl": {
     "message": "http://mozilla.com.cn/addon/325-easyscreenshot/"

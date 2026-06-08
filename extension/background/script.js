@@ -146,13 +146,14 @@ function handleRuntimeMessage(message, sender, sendResponse) {
   }
   console.log(message);
   switch (message.type) {
-    case "copy_image":
+    case "copy_image": {
       let msgKey = message.failed ? "copy_failure" : "copy_success";
       notify(chrome.i18n.getMessage(msgKey));
       chrome.tabs.remove(sender.tab.id);
       document.getElementById("sound-export").play();
       break;
-    case "download":
+    }
+    case "download": {
       let timestamp = formatTimestamp(new Date());
       // save in an alternative folder ?
       let filename = chrome.i18n.getMessage("save_file_name", timestamp);
@@ -168,7 +169,8 @@ function handleRuntimeMessage(message, sender, sendResponse) {
         tabIdByDownloadId.set(downloadId, sender.tab.id);
       });
       break;
-    case "editor_ready":
+    }
+    case "editor_ready": {
       let tabId = tabIdByEditorId.get(sender.tab.id);
       if (!tabId) {
         break;
@@ -182,6 +184,7 @@ function handleRuntimeMessage(message, sender, sendResponse) {
       tabIdByEditorId.delete(sender.tab.id);
       document.getElementById("sound-capture").play();
       break;
+    }
     case "popup_action":
       handlePopupAction(message, sender, sendResponse);
       break;
@@ -247,16 +250,24 @@ chrome.storage.onChanged.addListener(function(changes, area) {
   }
 });
 
-if (chrome.contextMenus) {
-  chrome.contextMenus.create({
-    id: "ess-settings",
-    title: chrome.i18n.getMessage("action_settings"),
-    contexts: ["browser_action"]
-  });
-  chrome.contextMenus.onClicked.addListener(function(info) {
+let menus = browser.menus || browser.contextMenus || chrome.contextMenus;
+if (menus) {
+  try {
+    menus.create({
+      id: "ess-settings",
+      title: chrome.i18n.getMessage("action_settings"),
+      contexts: ["browser_action"]
+    });
+  } catch (ex) {
+    console.error("Easy Screenshot Plus: failed to create settings menu", ex);
+  }
+  menus.onClicked.addListener(function(info) {
     if (info.menuItemId === "ess-settings") {
       chrome.runtime.openOptionsPage();
     }
   });
+} else {
+  console.error("Easy Screenshot Plus: menus API unavailable " +
+                "(is the \"menus\" permission granted?)");
 }
 console.log("background.js loaded");

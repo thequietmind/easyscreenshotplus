@@ -32,13 +32,14 @@
         sendResponse({});
         return false;
       case "entire":
-      case "visible":
+      case "visible": {
         CropOverlay.init();
         CropOverlay.cancel();
 
         let options = { rect: getSize(message) };
         sendResponse(options);
         return false;
+      }
       case "ping":
         sendResponse({
           type: "pong"

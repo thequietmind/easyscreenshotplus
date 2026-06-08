@@ -1,0 +1,40 @@
+# Changelog
+
+All notable changes to this project are documented here. The format is based on
+[Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project
+adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [3.110.0] - 2026-06-07
+
+First release of the **Easy Screenshot Plus** fork, continuing maintenance of
+the inactive upstream `mozilla-extensions/easyscreenshot`.
+
+### Added
+
+- Settings page (options UI) with two preferences:
+  - One-click whole-page capture when the toolbar icon is clicked (skips the
+    popup menu).
+  - Toggle for opening the download folder after saving (off by default).
+- "Settings" entry in the toolbar icon's right-click menu, opening the options
+  page.
+- `LICENSE` (MPL-2.0), `README.md`, and this changelog.
+
+### Changed
+
+- The system file manager (Finder/Explorer) no longer opens after saving a
+  screenshot; it is now opt-in via the new setting.
+- Saved files use macOS-style names, e.g.
+  `Screenshot 2026-06-07 at 6.14.17 PM.png`.
+- Options page now follows the browser's light/dark theme instead of a forced
+  white background.
+- Renamed the extension to "Easy Screenshot Plus" with a new add-on ID
+  (`easy-screenshot-plus@quietmindcreative.com`).
+- Modernized the lint toolchain to ESLint 9 (flat config) and added `web-ext`
+  for current-Firefox validation.
+- Modernized the manifest: `browser_specific_settings` (replacing the deprecated
+  `applications` key) and an explicit `data_collection_permissions` of `none`.
+
+### Removed
+
+- The "Settings" entry from the browser-action popup (moved to the icon's
+  right-click menu).

@@ -1,3 +1,5 @@
+/* exported Utils, CropOverlay */
+
 var Utils = {
   parse(element) {
     return {

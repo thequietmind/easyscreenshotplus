@@ -1,12 +1,12 @@
 {
   "browserActionTitle": {
-    "message": "Easy Screenshot"
+    "message": "Easy Screenshot Plus"
   },
   "extensionDescription": {
     "message": "Вы можете сделать снимок экрана, выбрав область или захватить всю / видимую веб-страницу. Затем отредактировать и сохранить его в виде файла изображения."
   },
   "extensionName": {
-    "message": "Easy Screenshot"
+    "message": "Easy Screenshot Plus"
   },
   "feedbackUrl": {
     "message": "https://addons.mozilla.org/firefox/addon/easyscreenshot/"
