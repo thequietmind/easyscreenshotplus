@@ -100,9 +100,6 @@
   "action_feedback": {
     "message": "意见反馈"
   },
-  "command_toolbarAction": {
-    "message": "使用工具栏操作"
-  },
   "command_showMenu": {
     "message": "显示截图菜单"
   },

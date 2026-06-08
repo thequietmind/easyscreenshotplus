@@ -38,9 +38,6 @@
       },
       "description": "__MSG_command_showMenu__"
     },
-    "_execute_browser_action": {
-      "description": "__MSG_command_toolbarAction__"
-    },
     "ess-entire": {
       "suggested_key": {
         "default": "Ctrl+Shift+S"

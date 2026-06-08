@@ -100,9 +100,6 @@
   "action_feedback": {
     "message": "Обратная связь"
   },
-  "command_toolbarAction": {
-    "message": "Использовать действие панели инструментов"
-  },
   "command_showMenu": {
     "message": "Показать меню захвата"
   },

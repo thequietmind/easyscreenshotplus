@@ -13,8 +13,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   - Capture the whole web page.
   - Capture the visible region.
   - Capture a web page region.
-- Firefox shortcut commands for showing the capture menu, using the configured
-  toolbar action, and running each capture mode directly.
+- Firefox shortcut commands for showing the capture menu and running each
+  capture mode directly.
 - Default shortcuts:
   - `Alt+Shift+S` shows the capture menu.
   - `Ctrl+Shift+S` captures the whole web page.

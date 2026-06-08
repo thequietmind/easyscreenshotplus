@@ -100,9 +100,6 @@
   "action_feedback": {
     "message": "Feedback"
   },
-  "command_toolbarAction": {
-    "message": "Use Toolbar Action"
-  },
   "command_showMenu": {
     "message": "Show Capture Menu"
   },
