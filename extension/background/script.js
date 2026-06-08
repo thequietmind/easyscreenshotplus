@@ -140,11 +140,6 @@ function handlePopupAction(message, sender, sendResponse) {
       case "visible":
         handleAction(message, sendResponse);
         return true;
-      case "feedback":
-        chrome.tabs.create({
-          url: chrome.i18n.getMessage("feedbackUrl")
-        }, sendResponse);
-        return true;
       default:
         return false;
     }

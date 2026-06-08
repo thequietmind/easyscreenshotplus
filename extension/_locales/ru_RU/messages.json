@@ -97,9 +97,6 @@
   "action_settings": {
     "message": "Настройки"
   },
-  "action_feedback": {
-    "message": "Обратная связь"
-  },
   "command_showMenu": {
     "message": "Показать меню захвата"
   },

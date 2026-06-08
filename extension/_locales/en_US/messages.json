@@ -97,9 +97,6 @@
   "action_settings": {
     "message": "Settings"
   },
-  "action_feedback": {
-    "message": "Feedback"
-  },
   "command_showMenu": {
     "message": "Show Capture Menu"
   },

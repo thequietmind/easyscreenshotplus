@@ -97,9 +97,6 @@
   "action_settings": {
     "message": "设置"
   },
-  "action_feedback": {
-    "message": "意见反馈"
-  },
   "command_showMenu": {
     "message": "显示截图菜单"
   },
