@@ -4,6 +4,31 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-06-08
+
+### Added
+
+- Toolbar icon action setting with four options:
+  - Show the capture menu.
+  - Capture the whole web page.
+  - Capture the visible region.
+  - Capture a web page region.
+- Firefox shortcut commands for showing the capture menu, using the configured
+  toolbar action, and running each capture mode directly.
+- Default shortcuts:
+  - `Alt+Shift+S` shows the capture menu.
+  - `Ctrl+Shift+S` captures the whole web page.
+- "Manage Keyboard Shortcuts" button in settings, opening Firefox's built-in
+  extension shortcut manager.
+- "Play sounds" setting, enabled by default.
+
+### Changed
+
+- Reordered capture menu actions to whole page, visible region, then web page
+  region.
+- Raised the minimum supported Firefox version to 137.0 for built-in shortcut
+  settings support.
+
 ## [1.0.0] - 2026-06-07
 
 First release of the **Easy Screenshot Plus** fork, continuing maintenance of
