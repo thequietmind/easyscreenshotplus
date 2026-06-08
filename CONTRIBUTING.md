@@ -32,3 +32,11 @@ npx web-ext sign --channel=unlisted --source-dir extension \
 
 Install the resulting signed `.xpi` via `about:addons` → gear →
 **Install Add-on From File**.
+
+## Packaging for AMO
+
+To create a zip archive for uploading to the Add-on Developer Hub:
+
+```sh
+npx web-ext build --source-dir extension --artifacts-dir web-ext-artifacts --overwrite-dest
+```
