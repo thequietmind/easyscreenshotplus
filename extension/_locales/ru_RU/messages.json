@@ -103,8 +103,11 @@
   "options_title": {
     "message": "Настройки Easy Screenshot"
   },
-  "options_captureWholePage_label": {
-    "message": "Захватывать всю веб-страницу при нажатии на значок на панели инструментов"
+  "options_browserActionAction_label": {
+    "message": "При нажатии на значок на панели инструментов"
+  },
+  "options_browserActionAction_menu": {
+    "message": "Показать меню захвата"
   },
   "options_openDirectory_label": {
     "message": "Открывать папку загрузок после сохранения снимка экрана"

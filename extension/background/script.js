@@ -2,6 +2,10 @@ let blobUrisByDownloadId = new Map();
 let dataUrisByTabId = new Map();
 let tabIdByDownloadId = new Map();
 let tabIdByEditorId = new Map();
+let browserActionActionKey = "browserAction.action";
+let legacyCaptureWholePageKey = "browserAction.captureWholePage";
+let browserActionActions = ["menu", "entire", "visible", "select"];
+let browserActionAction = "menu";
 
 function dataUriToBlob(dataUri) {
   const binary = atob(dataUri.split(",", 2)[1]);
@@ -221,9 +225,20 @@ function onCaptureEnded(tabId, dataUri) {
 }
 
 
-function applyBrowserActionMode(captureWholePage) {
+function getBrowserActionAction(results) {
+  if (browserActionActions.includes(results[browserActionActionKey])) {
+    return results[browserActionActionKey];
+  }
+  if (results[legacyCaptureWholePageKey] === true) {
+    return "entire";
+  }
+  return "menu";
+}
+
+function applyBrowserActionAction(action) {
+  browserActionAction = browserActionActions.includes(action) ? action : "menu";
   chrome.browserAction.setPopup({
-    popup: captureWholePage ? "" : "/popup/page.html"
+    popup: browserActionAction === "menu" ? "/popup/page.html" : ""
   });
 }
 
@@ -232,21 +247,40 @@ chrome.downloads.onChanged.addListener(handleDownloadChange);
 chrome.runtime.onMessage.addListener(handleRuntimeMessage);
 
 chrome.browserAction.onClicked.addListener(function() {
-  handleAction({action: "entire"}, function(response) {
+  if (browserActionAction === "menu") {
+    return;
+  }
+  handleAction({action: browserActionAction}, function(response) {
     if (response && response.error) {
       console.error(response.error);
     }
   });
 });
 
-chrome.storage.local.get(["browserAction.captureWholePage"], function(results) {
-  applyBrowserActionMode(results["browserAction.captureWholePage"] === true);
+applyBrowserActionAction(browserActionAction);
+
+chrome.storage.local.get([
+  browserActionActionKey,
+  legacyCaptureWholePageKey
+], function(results) {
+  applyBrowserActionAction(getBrowserActionAction(results));
 });
 
 chrome.storage.onChanged.addListener(function(changes, area) {
-  if (area === "local" && changes["browserAction.captureWholePage"]) {
-    applyBrowserActionMode(
-      changes["browserAction.captureWholePage"].newValue === true);
+  if (area !== "local") {
+    return;
+  }
+  if (changes[browserActionActionKey]) {
+    applyBrowserActionAction(changes[browserActionActionKey].newValue);
+    return;
+  }
+  if (changes[legacyCaptureWholePageKey] &&
+      changes[legacyCaptureWholePageKey].newValue === true) {
+    applyBrowserActionAction("entire");
+    return;
+  }
+  if (changes[legacyCaptureWholePageKey]) {
+    applyBrowserActionAction("menu");
   }
 });
 

@@ -103,8 +103,11 @@
   "options_title": {
     "message": "Easy Screenshot 设置"
   },
-  "options_captureWholePage_label": {
-    "message": "点击工具栏图标时截取整个网页"
+  "options_browserActionAction_label": {
+    "message": "点击工具栏图标时"
+  },
+  "options_browserActionAction_menu": {
+    "message": "显示截图菜单"
   },
   "options_openDirectory_label": {
     "message": "保存截图后打开下载文件夹"

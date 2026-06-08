@@ -1,7 +1,20 @@
+let browserActionActionKey = "browserAction.action";
+let legacyCaptureWholePageKey = "browserAction.captureWholePage";
+let browserActionActions = ["menu", "entire", "visible", "select"];
+
 let prefsByCheckboxId = {
-  "captureWholePage": "browserAction.captureWholePage",
   "openDirectory": "downloads.openDirectory"
 };
+
+function getBrowserActionAction(results) {
+  if (browserActionActions.includes(results[browserActionActionKey])) {
+    return results[browserActionActionKey];
+  }
+  if (results[legacyCaptureWholePageKey] === true) {
+    return "entire";
+  }
+  return "menu";
+}
 
 let options = {
   handleEvent(evt) {
@@ -10,6 +23,12 @@ let options = {
         this.init();
         break;
       case "change":
+        if (evt.target.name === "browserActionAction") {
+          chrome.storage.local.set({
+            [browserActionActionKey]: evt.target.value
+          });
+          break;
+        }
         chrome.storage.local.set({
           [prefsByCheckboxId[evt.target.id]]: evt.target.checked
         });
@@ -21,7 +40,26 @@ let options = {
   init() {
     document.title = chrome.i18n.getMessage("options_title");
 
-    chrome.storage.local.get(Object.values(prefsByCheckboxId), function(results) {
+    chrome.storage.local.get([
+      browserActionActionKey,
+      legacyCaptureWholePageKey,
+      ...Object.values(prefsByCheckboxId)
+    ], function(results) {
+      let action = getBrowserActionAction(results);
+      document.getElementById("browserActionAction-label").textContent =
+        chrome.i18n.getMessage("options_browserActionAction_label");
+      browserActionActions.forEach(function(value) {
+        let radio = document.querySelector(
+          `input[name="browserActionAction"][value="${value}"]`);
+        let messageName = value === "menu" ?
+          "options_browserActionAction_menu" : "action_" + value;
+        document.getElementById(
+          "browserActionAction-" + value + "-label").textContent =
+          chrome.i18n.getMessage(messageName);
+        radio.checked = (value === action);
+        radio.addEventListener("change", options);
+      });
+
       Object.keys(prefsByCheckboxId).forEach(function(id) {
         let checkbox = document.getElementById(id);
         document.getElementById(id + "-label").textContent =

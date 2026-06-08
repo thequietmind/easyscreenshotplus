@@ -92,7 +92,7 @@
     "message": "Capture Whole Web Page"
   },
   "action_visible": {
-    "message": "Capture Visible Web Content"
+    "message": "Capture Visible Region"
   },
   "action_settings": {
     "message": "Settings"
@@ -103,8 +103,11 @@
   "options_title": {
     "message": "Easy Screenshot Settings"
   },
-  "options_captureWholePage_label": {
-    "message": "Capture the whole web page when the toolbar icon is clicked"
+  "options_browserActionAction_label": {
+    "message": "When the toolbar icon is clicked"
+  },
+  "options_browserActionAction_menu": {
+    "message": "Show Capture Menu"
   },
   "options_openDirectory_label": {
     "message": "Open the download folder after saving a screenshot"

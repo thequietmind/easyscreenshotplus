@@ -4,10 +4,26 @@
 <script src="./script.js"></script>
 <link href="./style.css" rel="stylesheet" type="text/css"/>
 
-<label>
-  <input type="checkbox" id="captureWholePage">
-  <span id="captureWholePage-label"></span>
-</label>
+<fieldset>
+  <legend id="browserActionAction-label"></legend>
+  <label>
+    <input type="radio" name="browserActionAction" value="menu">
+    <span id="browserActionAction-menu-label"></span>
+  </label>
+  <label>
+    <input type="radio" name="browserActionAction" value="entire">
+    <span id="browserActionAction-entire-label"></span>
+  </label>
+  <label>
+    <input type="radio" name="browserActionAction" value="visible">
+    <span id="browserActionAction-visible-label"></span>
+  </label>
+  <label>
+    <input type="radio" name="browserActionAction" value="select">
+    <span id="browserActionAction-select-label"></span>
+  </label>
+</fieldset>
+
 <label>
   <input type="checkbox" id="openDirectory">
   <span id="openDirectory-label"></span>
