@@ -4,7 +4,7 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.110.0] - 2026-06-07
+## [1.0.0] - 2026-06-07
 
 First release of the **Easy Screenshot Plus** fork, continuing maintenance of
 the inactive upstream `mozilla-extensions/easyscreenshot`.
@@ -33,8 +33,3 @@ the inactive upstream `mozilla-extensions/easyscreenshot`.
   for current-Firefox validation.
 - Modernized the manifest: `browser_specific_settings` (replacing the deprecated
   `applications` key) and an explicit `data_collection_permissions` of `none`.
-
-### Removed
-
-- The "Settings" entry from the browser-action popup (moved to the icon's
-  right-click menu).

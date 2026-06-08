@@ -1,6 +1,6 @@
 {
   "name": "easy-screenshot-plus",
-  "version": "3.110.0",
+  "version": "1.0.0",
   "description": "Easy Screenshot Plus — capture, edit, and save Firefox screenshots. A community-maintained fork of Easy Screenshot.",
   "scripts": {
     "lint": "eslint extension",
