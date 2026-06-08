@@ -72,6 +72,11 @@ function handleCommand(cmd) {
   }
 
   let action = cmd.slice("ess-".length);
+  if (action === "menu") {
+    openCaptureMenu();
+    return;
+  }
+
   handleAction({action}, response => {
     if (response && response.error) {
       console.error(response.error);
@@ -240,6 +245,17 @@ function applyBrowserActionAction(action) {
   chrome.browserAction.setPopup({
     popup: browserActionAction === "menu" ? "/popup/page.html" : ""
   });
+}
+
+function openCaptureMenu() {
+  browser.browserAction.setPopup({
+    popup: "/popup/page.html"
+  }).then(() => browser.browserAction.openPopup())
+    .catch(error => {
+      console.error("Easy Screenshot Plus: failed to open capture menu", error);
+    }).finally(() => {
+      applyBrowserActionAction(browserActionAction);
+    });
 }
 
 chrome.commands.onCommand.addListener(handleCommand);

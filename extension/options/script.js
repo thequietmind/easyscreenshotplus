@@ -33,6 +33,9 @@ let options = {
           [prefsByCheckboxId[evt.target.id]]: evt.target.checked
         });
         break;
+      case "click":
+        browser.commands.openShortcutSettings();
+        break;
       default:
         break;
     }
@@ -67,6 +70,11 @@ let options = {
         checkbox.checked = (results[prefsByCheckboxId[id]] === true);
         checkbox.addEventListener("change", options);
       });
+
+      let manageShortcuts = document.getElementById("manageShortcuts");
+      manageShortcuts.textContent =
+        chrome.i18n.getMessage("options_manageShortcuts_label");
+      manageShortcuts.addEventListener("click", options);
     });
   }
 }

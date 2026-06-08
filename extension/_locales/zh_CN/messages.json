@@ -100,6 +100,12 @@
   "action_feedback": {
     "message": "意见反馈"
   },
+  "command_toolbarAction": {
+    "message": "使用工具栏操作"
+  },
+  "command_showMenu": {
+    "message": "显示截图菜单"
+  },
   "options_title": {
     "message": "Easy Screenshot 设置"
   },
@@ -108,6 +114,9 @@
   },
   "options_browserActionAction_menu": {
     "message": "显示截图菜单"
+  },
+  "options_manageShortcuts_label": {
+    "message": "管理键盘快捷键"
   },
   "options_openDirectory_label": {
     "message": "保存截图后打开下载文件夹"

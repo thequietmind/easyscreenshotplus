@@ -2,7 +2,7 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "easy-screenshot-plus@quietmindcreative.com",
-      "strict_min_version": "82.0",
+      "strict_min_version": "137.0",
       "data_collection_permissions": {
         "required": ["none"]
       }
@@ -32,17 +32,26 @@
     }]
   },
   "commands": {
-    "ess-select": {
+    "ess-menu": {
+      "suggested_key": {
+        "default": "Alt+Shift+S"
+      },
+      "description": "__MSG_command_showMenu__"
+    },
+    "_execute_browser_action": {
+      "description": "__MSG_command_toolbarAction__"
+    },
+    "ess-entire": {
       "suggested_key": {
         "default": "Ctrl+Shift+S"
       },
-      "description": "__MSG_action_select__"
-    },
-    "ess-entire": {
       "description": "__MSG_action_entire__"
     },
     "ess-visible": {
       "description": "__MSG_action_visible__"
+    },
+    "ess-select": {
+      "description": "__MSG_action_select__"
     }
   },
   "content_scripts": [

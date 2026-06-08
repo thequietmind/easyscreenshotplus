@@ -100,6 +100,12 @@
   "action_feedback": {
     "message": "Feedback"
   },
+  "command_toolbarAction": {
+    "message": "Use Toolbar Action"
+  },
+  "command_showMenu": {
+    "message": "Show Capture Menu"
+  },
   "options_title": {
     "message": "Easy Screenshot Settings"
   },
@@ -108,6 +114,9 @@
   },
   "options_browserActionAction_menu": {
     "message": "Show Capture Menu"
+  },
+  "options_manageShortcuts_label": {
+    "message": "Manage Keyboard Shortcuts"
   },
   "options_openDirectory_label": {
     "message": "Open the download folder after saving a screenshot"
