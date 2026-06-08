@@ -1,0 +1,262 @@
+let blobUrisByDownloadId = new Map();
+let dataUrisByTabId = new Map();
+let tabIdByDownloadId = new Map();
+let tabIdByEditorId = new Map();
+
+function dataUriToBlob(dataUri) {
+  const binary = atob(dataUri.split(",", 2)[1]);
+  const data = Uint8Array.from(binary, char => char.charCodeAt(0));
+  const blob = new Blob([data], {type: "image/png"});
+  return blob;
+}
+
+function formatTimestamp(date) {
+  let pad = n => String(n).padStart(2, "0");
+  let day = `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+  let hours = date.getHours();
+  let suffix = hours < 12 ? "AM" : "PM";
+  let hour12 = (hours % 12) || 12;
+  let time = `${hour12}.${pad(date.getMinutes())}.${pad(date.getSeconds())} ${suffix}`;
+  return `${day} at ${time}`;
+}
+
+function getSnapshot(message, tab, sendResponse) {
+  switch (message.action) {
+    case "select":
+      chrome.tabs.sendMessage(tab.id, {
+        type: "select"
+      }, undefined, sendResponse);
+      break;
+    case "entire":
+    case "visible":
+      chrome.tabs.sendMessage(tab.id, {
+        type: message.action,
+        selected: (message.selected || {})
+      }, function(options) {
+        browser.tabs.captureTab(tab.id, options).then(dataUri => {
+          onCaptureEnded(tab.id, dataUri);
+        });
+      });
+      break;
+    default:
+      break;
+  }
+}
+
+function handleAction(message, sendResponse) {
+  chrome.tabs.query({
+    active: true,
+    currentWindow: true
+  }, function(tabs) {
+    if (tabs.length < 1) {
+      sendResponse({
+        error: "No active tab in currentWindow?"
+      });
+      return;
+    }
+    if (tabs.length > 1) {
+      console.error(tabs);
+    }
+
+    getSnapshot(message, tabs[0], sendResponse);
+  });
+}
+
+function handleCommand(cmd) {
+  if (!cmd.startsWith("ess-")) {
+    return;
+  }
+
+  let action = cmd.slice("ess-".length);
+  handleAction({action}, response => {
+    if (response && response.error) {
+      console.error(response.error);
+    } else {
+      console.log(response);
+    }
+  });
+}
+
+function handleDownloadChange(downloadDelta) {
+  if (!blobUrisByDownloadId.has(downloadDelta.id)) {
+    return;
+  }
+
+  if (!downloadDelta.state ||
+      downloadDelta.state.current === "in_progress") {
+    return;
+  }
+
+  URL.revokeObjectURL(blobUrisByDownloadId.get(downloadDelta.id));
+  blobUrisByDownloadId.delete(downloadDelta.id);
+  chrome.tabs.remove(tabIdByDownloadId.get(downloadDelta.id), function() {
+    tabIdByDownloadId.delete(downloadDelta.id);
+  });
+
+  if (downloadDelta.state.current === "interrupt") {
+    notify(chrome.i18n.getMessage("save_failure"));
+    return;
+  }
+  document.getElementById("sound-export").play();
+  chrome.downloads.search({
+    id: downloadDelta.id
+  }, function(results) {
+    notify(chrome.i18n.getMessage("save_success"),
+           (results.length && results[0].filename));
+  });
+
+  chrome.storage.local.get(["downloads.openDirectory"], function(results) {
+    if (results["downloads.openDirectory"] !== true) {
+      return;
+    }
+
+    chrome.downloads.show(downloadDelta.id);
+  });
+}
+
+function handlePopupAction(message, sender, sendResponse) {
+  try {
+    switch (message.action) {
+      case "select":
+      case "entire":
+      case "visible":
+        handleAction(message, sendResponse);
+        return true;
+      case "feedback":
+        chrome.tabs.create({
+          url: chrome.i18n.getMessage("feedbackUrl")
+        }, sendResponse);
+        return true;
+      default:
+        return false;
+    }
+  } catch (ex) {
+    sendResponse({
+      error: ex.message
+    });
+    return false;
+  }
+}
+
+function handleRuntimeMessage(message, sender, sendResponse) {
+  if (["content2bg",
+       "editor2bg",
+       "popup2bg"].indexOf(message.dir) < 0) {
+    return;
+  }
+  console.log(message);
+  switch (message.type) {
+    case "copy_image":
+      let msgKey = message.failed ? "copy_failure" : "copy_success";
+      notify(chrome.i18n.getMessage(msgKey));
+      chrome.tabs.remove(sender.tab.id);
+      document.getElementById("sound-export").play();
+      break;
+    case "download":
+      let timestamp = formatTimestamp(new Date());
+      // save in an alternative folder ?
+      let filename = chrome.i18n.getMessage("save_file_name", timestamp);
+      let blob = dataUriToBlob(message.url);
+      let url = URL.createObjectURL(blob);
+      chrome.downloads.download({
+        url,
+        incognito: sender.tab.incognito,
+        filename,
+        conflictAction: "uniquify"
+      }, function(downloadId) {
+        blobUrisByDownloadId.set(downloadId, url);
+        tabIdByDownloadId.set(downloadId, sender.tab.id);
+      });
+      break;
+    case "editor_ready":
+      let tabId = tabIdByEditorId.get(sender.tab.id);
+      if (!tabId) {
+        break;
+      }
+      let dataUri = dataUrisByTabId.get(tabId);
+      if (!dataUri) {
+        break;
+      }
+      sendResponse({ dataUri });
+      dataUrisByTabId.delete(tabId);
+      tabIdByEditorId.delete(sender.tab.id);
+      document.getElementById("sound-capture").play();
+      break;
+    case "popup_action":
+      handlePopupAction(message, sender, sendResponse);
+      break;
+    case "removetab":
+      chrome.tabs.remove(sender.tab.id);
+      break;
+    default:
+      break;
+  }
+}
+
+function notify(title, text) {
+  chrome.notifications.create({
+    "type": "basic",
+    "iconUrl": "icons/icon-48.png", // ?
+    "title": (title || ""),
+    "message": (text || "")
+  });
+}
+
+function onCaptureEnded(tabId, dataUri) {
+  try {
+    dataUrisByTabId.set(tabId, dataUri);
+
+    chrome.tabs.create({
+      openerTabId: tabId,
+      url: chrome.runtime.getURL("editor/page.html")
+    }, function(tab) {
+      tabIdByEditorId.set(tab.id, tabId);
+    });
+  } catch (ex) {
+    console.error(ex);
+  }
+}
+
+
+function applyBrowserActionMode(captureWholePage) {
+  chrome.browserAction.setPopup({
+    popup: captureWholePage ? "" : "popup/page.html"
+  });
+}
+
+chrome.commands.onCommand.addListener(handleCommand);
+chrome.downloads.onChanged.addListener(handleDownloadChange);
+chrome.runtime.onMessage.addListener(handleRuntimeMessage);
+
+chrome.browserAction.onClicked.addListener(function() {
+  handleAction({action: "entire"}, function(response) {
+    if (response && response.error) {
+      console.error(response.error);
+    }
+  });
+});
+
+chrome.storage.local.get(["browserAction.captureWholePage"], function(results) {
+  applyBrowserActionMode(results["browserAction.captureWholePage"] === true);
+});
+
+chrome.storage.onChanged.addListener(function(changes, area) {
+  if (area === "local" && changes["browserAction.captureWholePage"]) {
+    applyBrowserActionMode(
+      changes["browserAction.captureWholePage"].newValue === true);
+  }
+});
+
+if (chrome.contextMenus) {
+  chrome.contextMenus.create({
+    id: "ess-settings",
+    title: chrome.i18n.getMessage("action_settings"),
+    contexts: ["browser_action"]
+  });
+  chrome.contextMenus.onClicked.addListener(function(info) {
+    if (info.menuItemId === "ess-settings") {
+      chrome.runtime.openOptionsPage();
+    }
+  });
+}
+console.log("background.js loaded");
