@@ -223,7 +223,7 @@ function onCaptureEnded(tabId, dataUri) {
 
 function applyBrowserActionMode(captureWholePage) {
   chrome.browserAction.setPopup({
-    popup: captureWholePage ? "" : "popup/page.html"
+    popup: captureWholePage ? "" : "/popup/page.html"
   });
 }
 
