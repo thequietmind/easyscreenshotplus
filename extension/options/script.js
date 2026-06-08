@@ -3,7 +3,8 @@ let legacyCaptureWholePageKey = "browserAction.captureWholePage";
 let browserActionActions = ["menu", "entire", "visible", "select"];
 
 let prefsByCheckboxId = {
-  "openDirectory": "downloads.openDirectory"
+  "openDirectory": "downloads.openDirectory",
+  "playSounds": "sounds.enabled"
 };
 
 function getBrowserActionAction(results) {
@@ -67,7 +68,9 @@ let options = {
         let checkbox = document.getElementById(id);
         document.getElementById(id + "-label").textContent =
           chrome.i18n.getMessage("options_" + id + "_label");
-        checkbox.checked = (results[prefsByCheckboxId[id]] === true);
+        checkbox.checked = id === "playSounds" ?
+          results[prefsByCheckboxId[id]] !== false :
+          results[prefsByCheckboxId[id]] === true;
         checkbox.addEventListener("change", options);
       });
 

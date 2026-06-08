@@ -120,5 +120,8 @@
   },
   "options_openDirectory_label": {
     "message": "Open the download folder after saving a screenshot"
+  },
+  "options_playSounds_label": {
+    "message": "Play sounds"
   }
 }

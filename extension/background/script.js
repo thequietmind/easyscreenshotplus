@@ -6,6 +6,8 @@ let browserActionActionKey = "browserAction.action";
 let legacyCaptureWholePageKey = "browserAction.captureWholePage";
 let browserActionActions = ["menu", "entire", "visible", "select"];
 let browserActionAction = "menu";
+let soundsEnabledKey = "sounds.enabled";
+let soundsEnabled = true;
 
 function dataUriToBlob(dataUri) {
   const binary = atob(dataUri.split(",", 2)[1]);
@@ -22,6 +24,13 @@ function formatTimestamp(date) {
   let hour12 = (hours % 12) || 12;
   let time = `${hour12}.${pad(date.getMinutes())}.${pad(date.getSeconds())} ${suffix}`;
   return `${day} at ${time}`;
+}
+
+function playSound(id) {
+  if (!soundsEnabled) {
+    return;
+  }
+  document.getElementById(id).play();
 }
 
 function getSnapshot(message, tab, sendResponse) {
@@ -106,7 +115,7 @@ function handleDownloadChange(downloadDelta) {
     notify(chrome.i18n.getMessage("save_failure"));
     return;
   }
-  document.getElementById("sound-export").play();
+  playSound("sound-export");
   chrome.downloads.search({
     id: downloadDelta.id
   }, function(results) {
@@ -159,7 +168,7 @@ function handleRuntimeMessage(message, sender, sendResponse) {
       let msgKey = message.failed ? "copy_failure" : "copy_success";
       notify(chrome.i18n.getMessage(msgKey));
       chrome.tabs.remove(sender.tab.id);
-      document.getElementById("sound-export").play();
+      playSound("sound-export");
       break;
     }
     case "download": {
@@ -191,7 +200,7 @@ function handleRuntimeMessage(message, sender, sendResponse) {
       sendResponse({ dataUri });
       dataUrisByTabId.delete(tabId);
       tabIdByEditorId.delete(sender.tab.id);
-      document.getElementById("sound-capture").play();
+      playSound("sound-capture");
       break;
     }
     case "popup_action":
@@ -277,14 +286,19 @@ applyBrowserActionAction(browserActionAction);
 
 chrome.storage.local.get([
   browserActionActionKey,
-  legacyCaptureWholePageKey
+  legacyCaptureWholePageKey,
+  soundsEnabledKey
 ], function(results) {
   applyBrowserActionAction(getBrowserActionAction(results));
+  soundsEnabled = results[soundsEnabledKey] !== false;
 });
 
 chrome.storage.onChanged.addListener(function(changes, area) {
   if (area !== "local") {
     return;
+  }
+  if (changes[soundsEnabledKey]) {
+    soundsEnabled = changes[soundsEnabledKey].newValue !== false;
   }
   if (changes[browserActionActionKey]) {
     applyBrowserActionAction(changes[browserActionActionKey].newValue);

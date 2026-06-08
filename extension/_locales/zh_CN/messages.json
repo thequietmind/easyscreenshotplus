@@ -120,5 +120,8 @@
   },
   "options_openDirectory_label": {
     "message": "保存截图后打开下载文件夹"
+  },
+  "options_playSounds_label": {
+    "message": "播放声音"
   }
 }

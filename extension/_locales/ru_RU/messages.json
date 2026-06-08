@@ -120,5 +120,8 @@
   },
   "options_openDirectory_label": {
     "message": "Открывать папку загрузок после сохранения снимка экрана"
+  },
+  "options_playSounds_label": {
+    "message": "Воспроизводить звуки"
   }
 }
