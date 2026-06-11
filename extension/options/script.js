@@ -3,11 +3,30 @@ let legacyCaptureWholePageKey = "browserAction.captureWholePage";
 let browserActionActions = ["menu", "entire", "visible", "select"];
 let modifierActionKey = "browserAction.modifierAction";
 let modifierActions = ["none", "entire", "visible", "select"];
+let filenamePrefixKey = "downloads.filenamePrefix";
 
 let prefsByCheckboxId = {
   "openDirectory": "downloads.openDirectory",
   "playSounds": "sounds.enabled"
 };
+
+function normalizeFilenamePrefix(value) {
+  let prefix = value.trim();
+  prefix = Array.from(prefix, function(character) {
+    let invalidCharacters = "<>:\"/\\|?*";
+    if (character.charCodeAt(0) < 32 ||
+        invalidCharacters.includes(character)) {
+      return "-";
+    }
+    return character;
+  }).join("").replace(/[. ]+$/, "");
+  return prefix || chrome.i18n.getMessage("save_file_prefix");
+}
+
+function updateFilenameExample(prefix) {
+  document.getElementById("filenamePrefix-example").textContent =
+    chrome.i18n.getMessage("options_filenamePrefix_example", prefix);
+}
 
 function getBrowserActionAction(results) {
   if (browserActionActions.includes(results[browserActionActionKey])) {
@@ -70,6 +89,15 @@ let options = {
           });
           break;
         }
+        if (evt.target.id === "filenamePrefix") {
+          let prefix = normalizeFilenamePrefix(evt.target.value);
+          evt.target.value = prefix;
+          updateFilenameExample(prefix);
+          chrome.storage.local.set({
+            [filenamePrefixKey]: prefix
+          });
+          break;
+        }
         chrome.storage.local.set({
           [prefsByCheckboxId[evt.target.id]]: evt.target.checked
         });
@@ -88,6 +116,7 @@ let options = {
       browserActionActionKey,
       legacyCaptureWholePageKey,
       modifierActionKey,
+      filenamePrefixKey,
       ...Object.values(prefsByCheckboxId)
     ], function(results) {
       let action = getBrowserActionAction(results);
@@ -129,6 +158,15 @@ let options = {
           [modifierActionKey]: availableModifierAction
         });
       }
+
+      let filenamePrefix = document.getElementById("filenamePrefix");
+      filenamePrefix.value = normalizeFilenamePrefix(
+        results[filenamePrefixKey] || ""
+      );
+      document.getElementById("filenamePrefix-label").textContent =
+        chrome.i18n.getMessage("options_filenamePrefix_label");
+      updateFilenameExample(filenamePrefix.value);
+      filenamePrefix.addEventListener("change", options);
 
       Object.keys(prefsByCheckboxId).forEach(function(id) {
         let checkbox = document.getElementById(id);

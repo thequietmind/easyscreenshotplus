@@ -65,13 +65,8 @@
   "editor_crop_instruction": {
     "message": "Drag to start, double click to finish"
   },
-  "save_file_name": {
-    "message": "Screenshot $TIMESTAMP$.png",
-    "placeholders": {
-      "timestamp" : {
-        "content" : "$1"
-      }
-    }
+  "save_file_prefix": {
+    "message": "Screenshot"
   },
   "save_success": {
     "message": "Screenshot saved"
@@ -114,6 +109,17 @@
   },
   "options_modifierAction_none": {
     "message": "Use the regular toolbar action"
+  },
+  "options_filenamePrefix_label": {
+    "message": "Screenshot filename prefix"
+  },
+  "options_filenamePrefix_example": {
+    "message": "Example: $PREFIX$ 2026-06-11 at 5.31.24 PM.png",
+    "placeholders": {
+      "prefix": {
+        "content": "$1"
+      }
+    }
   },
   "options_manageShortcuts_label": {
     "message": "Manage Keyboard Shortcuts"

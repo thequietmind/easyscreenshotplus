@@ -65,13 +65,8 @@
   "editor_crop_instruction": {
     "message": "拖动开始，双击完成"
   },
-  "save_file_name": {
-    "message": "截屏 $TIMESTAMP$.png",
-    "placeholders": {
-      "timestamp" : {
-        "content" : "$1"
-      }
-    }
+  "save_file_prefix": {
+    "message": "截屏"
   },
   "save_success": {
     "message": "截图已保存"
@@ -114,6 +109,17 @@
   },
   "options_modifierAction_none": {
     "message": "使用常规工具栏操作"
+  },
+  "options_filenamePrefix_label": {
+    "message": "截图文件名前缀"
+  },
+  "options_filenamePrefix_example": {
+    "message": "示例：$PREFIX$ 2026-06-11 at 5.31.24 PM.png",
+    "placeholders": {
+      "prefix": {
+        "content": "$1"
+      }
+    }
   },
   "options_manageShortcuts_label": {
     "message": "管理键盘快捷键"

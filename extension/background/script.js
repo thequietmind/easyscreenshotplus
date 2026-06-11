@@ -11,12 +11,27 @@ let modifierActions = ["none", "entire", "visible", "select"];
 let modifierAction = "visible";
 let soundsEnabledKey = "sounds.enabled";
 let soundsEnabled = true;
+let filenamePrefixKey = "downloads.filenamePrefix";
+let filenamePrefix = chrome.i18n.getMessage("save_file_prefix");
 
 function dataUriToBlob(dataUri) {
   const binary = atob(dataUri.split(",", 2)[1]);
   const data = Uint8Array.from(binary, char => char.charCodeAt(0));
   const blob = new Blob([data], {type: "image/png"});
   return blob;
+}
+
+function normalizeFilenamePrefix(value) {
+  let prefix = typeof value === "string" ? value.trim() : "";
+  prefix = Array.from(prefix, function(character) {
+    let invalidCharacters = "<>:\"/\\|?*";
+    if (character.charCodeAt(0) < 32 ||
+        invalidCharacters.includes(character)) {
+      return "-";
+    }
+    return character;
+  }).join("").replace(/[. ]+$/, "");
+  return prefix || chrome.i18n.getMessage("save_file_prefix");
 }
 
 function formatTimestamp(date) {
@@ -27,6 +42,10 @@ function formatTimestamp(date) {
   let hour12 = (hours % 12) || 12;
   let time = `${hour12}.${pad(date.getMinutes())}.${pad(date.getSeconds())} ${suffix}`;
   return `${day} at ${time}`;
+}
+
+function getScreenshotFilename() {
+  return `${filenamePrefix} ${formatTimestamp(new Date())}.png`;
 }
 
 function playSound(id) {
@@ -235,15 +254,12 @@ function handleRuntimeMessage(message, sender, sendResponse) {
       break;
     }
     case "download": {
-      let timestamp = formatTimestamp(new Date());
-      // save in an alternative folder ?
-      let filename = chrome.i18n.getMessage("save_file_name", timestamp);
       let blob = dataUriToBlob(message.url);
       let url = URL.createObjectURL(blob);
       chrome.downloads.download({
         url,
         incognito: sender.tab.incognito,
-        filename,
+        filename: getScreenshotFilename(),
         conflictAction: "uniquify"
       }, function(downloadId) {
         blobUrisByDownloadId.set(downloadId, url);
@@ -379,11 +395,13 @@ chrome.storage.local.get([
   browserActionActionKey,
   legacyCaptureWholePageKey,
   modifierActionKey,
-  soundsEnabledKey
+  soundsEnabledKey,
+  filenamePrefixKey
 ], function(results) {
   applyBrowserActionAction(getBrowserActionAction(results));
   modifierAction = getModifierAction(results[modifierActionKey]);
   soundsEnabled = results[soundsEnabledKey] !== false;
+  filenamePrefix = normalizeFilenamePrefix(results[filenamePrefixKey]);
 });
 
 chrome.storage.onChanged.addListener(function(changes, area) {
@@ -392,6 +410,11 @@ chrome.storage.onChanged.addListener(function(changes, area) {
   }
   if (changes[soundsEnabledKey]) {
     soundsEnabled = changes[soundsEnabledKey].newValue !== false;
+  }
+  if (changes[filenamePrefixKey]) {
+    filenamePrefix = normalizeFilenamePrefix(
+      changes[filenamePrefixKey].newValue
+    );
   }
   if (changes[modifierActionKey]) {
     modifierAction = getModifierAction(changes[modifierActionKey].newValue);

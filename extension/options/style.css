@@ -29,6 +29,17 @@ label {
   margin-bottom: 0.75em;
 }
 
+input[type="text"] {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.hint {
+  margin-top: 0.4em;
+  color: GrayText;
+  font-size: 0.9em;
+}
+
 button {
   margin-top: 0.25em;
 }

@@ -65,13 +65,8 @@
   "editor_crop_instruction": {
     "message": "Перетащите, чтобы начать, двойной щелчок, чтобы закончить"
   },
-  "save_file_name": {
-    "message": "Снимок экрана $TIMESTAMP$.png",
-    "placeholders": {
-      "timestamp" : {
-        "content" : "$1"
-      }
-    }
+  "save_file_prefix": {
+    "message": "Снимок экрана"
   },
   "save_success": {
     "message": "Сохранить скриншот"
@@ -114,6 +109,17 @@
   },
   "options_modifierAction_none": {
     "message": "Использовать обычное действие панели инструментов"
+  },
+  "options_filenamePrefix_label": {
+    "message": "Префикс имени файла снимка экрана"
+  },
+  "options_filenamePrefix_example": {
+    "message": "Пример: $PREFIX$ 2026-06-11 at 5.31.24 PM.png",
+    "placeholders": {
+      "prefix": {
+        "content": "$1"
+      }
+    }
   },
   "options_manageShortcuts_label": {
     "message": "Настроить сочетания клавиш"

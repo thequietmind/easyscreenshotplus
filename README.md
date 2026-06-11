@@ -17,9 +17,11 @@ visible area, or capture an entire web page, then annotate and save.
   - Choose what a regular toolbar icon click does.
   - Choose an alternate action for Command-click on macOS or Ctrl-click on
     Windows and Linux. It defaults to capturing the visible region.
+  - Change the screenshot filename prefix.
   - **Open the download folder after saving a screenshot** — off by default, so
     your file manager no longer pops open on every save.
-- macOS-style filenames, e.g. `Screenshot 2026-06-07 at 6.14.17 PM.png`.
+- Consistent macOS-style filenames on every platform, e.g.
+  `Screenshot 2026-06-11 at 5.31.24 PM.png`.
 
 ## Credits
 
