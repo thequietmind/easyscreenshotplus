@@ -276,17 +276,20 @@ function openCaptureMenu() {
 }
 
 function hasAlternateActionModifier(clickData) {
+  if (!clickData || !Array.isArray(clickData.modifiers)) {
+    return false;
+  }
   return clickData.modifiers.includes("Command") ||
     clickData.modifiers.includes("Ctrl");
 }
 
-function runToolbarAction(action) {
+function runToolbarAction(action, tab) {
   if (action === "menu") {
     openCaptureMenu();
     return;
   }
 
-  handleAction({action}, function(response) {
+  getSnapshot({action}, tab, function(response) {
     if (response && response.error) {
       console.error(response.error);
     }
@@ -302,7 +305,7 @@ chrome.browserAction.onClicked.addListener(function(tab, clickData) {
   if (modifierAction !== "none" && hasAlternateActionModifier(clickData)) {
     action = modifierAction;
   }
-  runToolbarAction(action);
+  runToolbarAction(action, tab);
 });
 
 applyBrowserActionAction(browserActionAction);
