@@ -86,7 +86,7 @@
     "message": "Unable to copy screenshot to clipboard"
   },
   "action_select": {
-    "message": "Capture Web Page Region"
+    "message": "Capture Selected Region"
   },
   "action_entire": {
     "message": "Capture Whole Web Page"

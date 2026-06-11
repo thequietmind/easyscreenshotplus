@@ -86,7 +86,7 @@
     "message": "复制截图到剪贴板失败"
   },
   "action_select": {
-    "message": "截取网页选定区域"
+    "message": "截取选定区域"
   },
   "action_entire": {
     "message": "截取整个网页"
