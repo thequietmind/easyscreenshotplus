@@ -19,6 +19,31 @@ function getBrowserActionAction(results) {
   return "menu";
 }
 
+function getModifierAction(action, browserActionAction) {
+  if (modifierActions.includes(action) && action !== browserActionAction) {
+    return action;
+  }
+  return modifierActions.find(function(value) {
+    return value !== "none" && value !== browserActionAction;
+  });
+}
+
+function updateModifierActions(browserActionAction, modifierAction) {
+  let availableAction = getModifierAction(
+    modifierAction,
+    browserActionAction
+  );
+  modifierActions.forEach(function(value) {
+    let radio = document.querySelector(
+      `input[name="modifierAction"][value="${value}"]`);
+    let hidden = value === browserActionAction;
+    radio.closest("label").hidden = hidden;
+    radio.disabled = hidden;
+    radio.checked = value === availableAction;
+  });
+  return availableAction;
+}
+
 let options = {
   handleEvent(evt) {
     switch (evt.type) {
@@ -27,8 +52,15 @@ let options = {
         break;
       case "change":
         if (evt.target.name === "browserActionAction") {
+          let modifierRadio = document.querySelector(
+            'input[name="modifierAction"]:checked');
+          let modifierAction = updateModifierActions(
+            evt.target.value,
+            modifierRadio.value
+          );
           chrome.storage.local.set({
-            [browserActionActionKey]: evt.target.value
+            [browserActionActionKey]: evt.target.value,
+            [modifierActionKey]: modifierAction
           });
           break;
         }
@@ -86,9 +118,17 @@ let options = {
         document.getElementById(
           "modifierAction-" + value + "-label").textContent =
           chrome.i18n.getMessage(messageName);
-        radio.checked = (value === modifierAction);
         radio.addEventListener("change", options);
       });
+      let availableModifierAction = updateModifierActions(
+        action,
+        modifierAction
+      );
+      if (availableModifierAction !== modifierAction) {
+        chrome.storage.local.set({
+          [modifierActionKey]: availableModifierAction
+        });
+      }
 
       Object.keys(prefsByCheckboxId).forEach(function(id) {
         let checkbox = document.getElementById(id);

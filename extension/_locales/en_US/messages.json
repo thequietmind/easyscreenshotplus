@@ -110,7 +110,7 @@
     "message": "Show Capture Menu"
   },
   "options_modifierAction_label": {
-    "message": "When Command-clicking (macOS) or Ctrl-clicking (Windows/Linux)"
+    "message": "When the toolbar icon is Command-clicked (macOS) or Control-clicked"
   },
   "options_modifierAction_none": {
     "message": "Use the regular toolbar action"

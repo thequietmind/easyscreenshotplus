@@ -247,8 +247,18 @@ function getBrowserActionAction(results) {
   return "menu";
 }
 
+function getModifierAction(action) {
+  if (modifierActions.includes(action) && action !== browserActionAction) {
+    return action;
+  }
+  return modifierActions.find(function(value) {
+    return value !== "none" && value !== browserActionAction;
+  });
+}
+
 function applyBrowserActionAction(action) {
   browserActionAction = browserActionActions.includes(action) ? action : "menu";
+  modifierAction = getModifierAction(modifierAction);
   chrome.browserAction.setPopup({
     popup: ""
   });
@@ -304,8 +314,7 @@ chrome.storage.local.get([
   soundsEnabledKey
 ], function(results) {
   applyBrowserActionAction(getBrowserActionAction(results));
-  modifierAction = modifierActions.includes(results[modifierActionKey]) ?
-    results[modifierActionKey] : "visible";
+  modifierAction = getModifierAction(results[modifierActionKey]);
   soundsEnabled = results[soundsEnabledKey] !== false;
 });
 
@@ -317,9 +326,7 @@ chrome.storage.onChanged.addListener(function(changes, area) {
     soundsEnabled = changes[soundsEnabledKey].newValue !== false;
   }
   if (changes[modifierActionKey]) {
-    modifierAction = modifierActions.includes(
-      changes[modifierActionKey].newValue
-    ) ? changes[modifierActionKey].newValue : "visible";
+    modifierAction = getModifierAction(changes[modifierActionKey].newValue);
   }
   if (changes[browserActionActionKey]) {
     applyBrowserActionAction(changes[browserActionActionKey].newValue);
