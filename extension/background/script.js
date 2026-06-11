@@ -36,6 +36,68 @@ function playSound(id) {
   document.getElementById(id).play();
 }
 
+function getCaptureTiles(rect, tileSize) {
+  let tiles = [];
+  for (let y = 0; y < rect.height; y += tileSize) {
+    for (let x = 0; x < rect.width; x += tileSize) {
+      tiles.push({
+        x: rect.x + x,
+        y: rect.y + y,
+        width: Math.min(tileSize, rect.width - x),
+        height: Math.min(tileSize, rect.height - y)
+      });
+    }
+  }
+  return tiles;
+}
+
+function loadImage(dataUri) {
+  return new Promise(function(resolve, reject) {
+    let image = new Image();
+    image.onload = function() {
+      resolve(image);
+    };
+    image.onerror = reject;
+    image.src = dataUri;
+  });
+}
+
+async function captureTabArea(tabId, options) {
+  let tiles = getCaptureTiles(
+    options.rect,
+    options.tileSize || Math.max(options.rect.width, options.rect.height)
+  );
+  if (tiles.length === 1) {
+    return browser.tabs.captureTab(tabId, {rect: tiles[0]});
+  }
+
+  let firstDataUri = await browser.tabs.captureTab(tabId, {rect: tiles[0]});
+  let firstImage = await loadImage(firstDataUri);
+  let scaleX = firstImage.width / tiles[0].width;
+  let scaleY = firstImage.height / tiles[0].height;
+  let canvas = document.createElement("canvas");
+  canvas.width = Math.round(options.rect.width * scaleX);
+  canvas.height = Math.round(options.rect.height * scaleY);
+  let context = canvas.getContext("2d");
+  if (!context ||
+      canvas.width !== Math.round(options.rect.width * scaleX) ||
+      canvas.height !== Math.round(options.rect.height * scaleY)) {
+    throw new Error("Unable to allocate canvas for the full-page capture");
+  }
+  context.drawImage(firstImage, 0, 0);
+
+  for (let index = 1; index < tiles.length; index++) {
+    let tile = tiles[index];
+    let dataUri = await browser.tabs.captureTab(tabId, {rect: tile});
+    let image = await loadImage(dataUri);
+    let x = Math.round((tile.x - options.rect.x) * scaleX);
+    let y = Math.round((tile.y - options.rect.y) * scaleY);
+    context.drawImage(image, x, y);
+  }
+
+  return canvas.toDataURL("image/png");
+}
+
 function getSnapshot(message, tab, sendResponse) {
   switch (message.action) {
     case "select":
@@ -49,9 +111,12 @@ function getSnapshot(message, tab, sendResponse) {
         type: message.action,
         selected: (message.selected || {})
       }, function(options) {
-        browser.tabs.captureTab(tab.id, options).then(dataUri => {
-          onCaptureEnded(tab.id, dataUri);
-        });
+        captureTabArea(tab.id, options)
+          .then(dataUri => onCaptureEnded(tab.id, dataUri))
+          .catch(error => console.error(
+            "Easy Screenshot Plus: capture failed",
+            error
+          ));
       });
       break;
     default:

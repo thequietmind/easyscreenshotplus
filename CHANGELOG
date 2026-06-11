@@ -10,6 +10,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Configurable alternate toolbar action for Command-click on macOS and
   Ctrl-click on Windows or Linux, defaulting to visible-region capture.
+- Tiled capture and image stitching for web pages taller or wider than a
+  single Firefox capture region.
 
 ## [1.1.0] - 2026-06-08
 

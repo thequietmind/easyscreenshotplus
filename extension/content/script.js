@@ -1,27 +1,58 @@
 /* global CropOverlay */
 
 (function() {
-  let rootScrollable = document.compatMode === "BackCompat" ?
-    document.body : document.documentElement;
-  let sizeLimit = Math.pow(2, 13);
+  let captureSizeLimit = Math.pow(2, 13);
+  let imageSizeLimit = Math.pow(2, 15) - 1;
+
+  function getPageSize() {
+    let root = document.documentElement;
+    let body = document.body || root;
+    return {
+      width: Math.max(
+        body.scrollWidth,
+        body.offsetWidth,
+        root.clientWidth,
+        root.scrollWidth,
+        root.offsetWidth
+      ),
+      height: Math.max(
+        body.scrollHeight,
+        body.offsetHeight,
+        root.clientHeight,
+        root.scrollHeight,
+        root.offsetHeight
+      )
+    };
+  }
 
   function getSize(message) {
+    let rootScrollable = document.scrollingElement ||
+      (document.compatMode === "BackCompat" ?
+        document.body : document.documentElement);
     if (message.type === "entire") {
-      let zoomedSizeLimit = Math.floor(sizeLimit / window.devicePixelRatio);
+      let pixelRatio = window.devicePixelRatio || 1;
+      let tileSize = Math.floor(captureSizeLimit / pixelRatio);
+      let maximumSize = Math.floor(imageSizeLimit / pixelRatio);
+      let pageSize = getPageSize();
       return {
-        x: (message.selected.x || 0),
-        y: (message.selected.y || 0),
-        width: Math.min(message.selected.w || rootScrollable.scrollWidth, zoomedSizeLimit),
-        height: Math.min(message.selected.h || rootScrollable.scrollHeight, zoomedSizeLimit)
-      }
+        rect: {
+          x: message.selected.x || 0,
+          y: message.selected.y || 0,
+          width: Math.min(message.selected.w || pageSize.width, maximumSize),
+          height: Math.min(message.selected.h || pageSize.height, maximumSize)
+        },
+        tileSize
+      };
     }
 
     return {
-      x: rootScrollable.scrollLeft,
-      y: rootScrollable.scrollTop,
-      width: rootScrollable.clientWidth,
-      height: rootScrollable.clientHeight
-    }
+      rect: {
+        x: rootScrollable.scrollLeft,
+        y: rootScrollable.scrollTop,
+        width: rootScrollable.clientWidth,
+        height: rootScrollable.clientHeight
+      }
+    };
   }
 
   function handleRuntimeMessage(message, sender, sendResponse) {
@@ -36,8 +67,7 @@
         CropOverlay.init();
         CropOverlay.cancel();
 
-        let options = { rect: getSize(message) };
-        sendResponse(options);
+        sendResponse(getSize(message));
         return false;
       }
       case "ping":

@@ -9,6 +9,7 @@ visible area, or capture an entire web page, then annotate and save.
 ## Features
 
 - Capture a selected region, the visible area, or the whole web page.
+- Stitch multiple capture regions together for long web pages.
 - Built-in editor: crop, rectangles, ellipses, lines, freehand, text, and blur.
 - Save to disk or copy straight to the clipboard.
 - Settings page (light/dark aware), reachable from the toolbar icon's
