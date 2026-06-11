@@ -13,8 +13,9 @@ visible area, or capture an entire web page, then annotate and save.
 - Save to disk or copy straight to the clipboard.
 - Settings page (light/dark aware), reachable from the toolbar icon's
   right-click menu:
-  - **Capture the whole web page when the toolbar icon is clicked** — one-click
-    capture with no popup menu.
+  - Choose what a regular toolbar icon click does.
+  - Choose an alternate action for Command-click on macOS or Ctrl-click on
+    Windows and Linux. It defaults to capturing the visible region.
   - **Open the download folder after saving a screenshot** — off by default, so
     your file manager no longer pops open on every save.
 - macOS-style filenames, e.g. `Screenshot 2026-06-07 at 6.14.17 PM.png`.

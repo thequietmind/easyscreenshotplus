@@ -109,6 +109,12 @@
   "options_browserActionAction_menu": {
     "message": "Show Capture Menu"
   },
+  "options_modifierAction_label": {
+    "message": "When Command-clicking (macOS) or Ctrl-clicking (Windows/Linux)"
+  },
+  "options_modifierAction_none": {
+    "message": "Use the regular toolbar action"
+  },
   "options_manageShortcuts_label": {
     "message": "Manage Keyboard Shortcuts"
   },

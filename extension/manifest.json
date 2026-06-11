@@ -19,7 +19,6 @@
       "32": "icons/browser_action-dark.svg",
       "64": "icons/browser_action-dark.svg"
     },
-    "default_popup": "popup/page.html",
     "default_title": "__MSG_browserActionTitle__",
     "theme_icons": [{
       "light": "icons/browser_action-light.svg",

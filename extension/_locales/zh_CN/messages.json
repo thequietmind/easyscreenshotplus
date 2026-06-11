@@ -109,6 +109,12 @@
   "options_browserActionAction_menu": {
     "message": "显示截图菜单"
   },
+  "options_modifierAction_label": {
+    "message": "按住 Command (macOS) 或 Ctrl (Windows/Linux) 点击工具栏图标时"
+  },
+  "options_modifierAction_none": {
+    "message": "使用常规工具栏操作"
+  },
   "options_manageShortcuts_label": {
     "message": "管理键盘快捷键"
   },

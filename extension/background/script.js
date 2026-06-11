@@ -6,6 +6,9 @@ let browserActionActionKey = "browserAction.action";
 let legacyCaptureWholePageKey = "browserAction.captureWholePage";
 let browserActionActions = ["menu", "entire", "visible", "select"];
 let browserActionAction = "menu";
+let modifierActionKey = "browserAction.modifierAction";
+let modifierActions = ["none", "entire", "visible", "select"];
+let modifierAction = "visible";
 let soundsEnabledKey = "sounds.enabled";
 let soundsEnabled = true;
 
@@ -247,7 +250,7 @@ function getBrowserActionAction(results) {
 function applyBrowserActionAction(action) {
   browserActionAction = browserActionActions.includes(action) ? action : "menu";
   chrome.browserAction.setPopup({
-    popup: browserActionAction === "menu" ? "/popup/page.html" : ""
+    popup: ""
   });
 }
 
@@ -262,19 +265,34 @@ function openCaptureMenu() {
     });
 }
 
-chrome.commands.onCommand.addListener(handleCommand);
-chrome.downloads.onChanged.addListener(handleDownloadChange);
-chrome.runtime.onMessage.addListener(handleRuntimeMessage);
+function hasAlternateActionModifier(clickData) {
+  return clickData.modifiers.includes("Command") ||
+    clickData.modifiers.includes("Ctrl");
+}
 
-chrome.browserAction.onClicked.addListener(function() {
-  if (browserActionAction === "menu") {
+function runToolbarAction(action) {
+  if (action === "menu") {
+    openCaptureMenu();
     return;
   }
-  handleAction({action: browserActionAction}, function(response) {
+
+  handleAction({action}, function(response) {
     if (response && response.error) {
       console.error(response.error);
     }
   });
+}
+
+chrome.commands.onCommand.addListener(handleCommand);
+chrome.downloads.onChanged.addListener(handleDownloadChange);
+chrome.runtime.onMessage.addListener(handleRuntimeMessage);
+
+chrome.browserAction.onClicked.addListener(function(tab, clickData) {
+  let action = browserActionAction;
+  if (modifierAction !== "none" && hasAlternateActionModifier(clickData)) {
+    action = modifierAction;
+  }
+  runToolbarAction(action);
 });
 
 applyBrowserActionAction(browserActionAction);
@@ -282,9 +300,12 @@ applyBrowserActionAction(browserActionAction);
 chrome.storage.local.get([
   browserActionActionKey,
   legacyCaptureWholePageKey,
+  modifierActionKey,
   soundsEnabledKey
 ], function(results) {
   applyBrowserActionAction(getBrowserActionAction(results));
+  modifierAction = modifierActions.includes(results[modifierActionKey]) ?
+    results[modifierActionKey] : "visible";
   soundsEnabled = results[soundsEnabledKey] !== false;
 });
 
@@ -294,6 +315,11 @@ chrome.storage.onChanged.addListener(function(changes, area) {
   }
   if (changes[soundsEnabledKey]) {
     soundsEnabled = changes[soundsEnabledKey].newValue !== false;
+  }
+  if (changes[modifierActionKey]) {
+    modifierAction = modifierActions.includes(
+      changes[modifierActionKey].newValue
+    ) ? changes[modifierActionKey].newValue : "visible";
   }
   if (changes[browserActionActionKey]) {
     applyBrowserActionAction(changes[browserActionActionKey].newValue);
