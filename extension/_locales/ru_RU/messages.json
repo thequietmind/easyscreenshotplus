@@ -110,7 +110,7 @@
     "message": "Показать меню захвата"
   },
   "options_modifierAction_label": {
-    "message": "При нажатии на значок с Command (macOS) или Ctrl (Windows/Linux)"
+    "message": "При нажатии на значок панели инструментов с Command (macOS) или Control"
   },
   "options_modifierAction_none": {
     "message": "Использовать обычное действие панели инструментов"

@@ -110,7 +110,7 @@
     "message": "显示截图菜单"
   },
   "options_modifierAction_label": {
-    "message": "按住 Command (macOS) 或 Ctrl (Windows/Linux) 点击工具栏图标时"
+    "message": "使用 Command 键 (macOS) 或 Control 键点击工具栏图标时"
   },
   "options_modifierAction_none": {
     "message": "使用常规工具栏操作"
