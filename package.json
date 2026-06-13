@@ -25,6 +25,6 @@
     "eslint": "^9.0.0",
     "eslint-plugin-no-unsanitized": "^4.0.0",
     "globals": "^17.6.0",
-    "web-ext": "^10.3.0"
+    "web-ext": "^10.4.0"
   }
 }
