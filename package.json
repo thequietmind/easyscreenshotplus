@@ -21,7 +21,7 @@
     "url": "https://github.com/thequietmind/easyscreenshotplus/issues"
   },
   "devDependencies": {
-    "@eslint/js": "^9.0.0",
+    "@eslint/js": "^10.0.1",
     "eslint": "^9.0.0",
     "eslint-plugin-no-unsanitized": "^4.0.0",
     "globals": "^15.0.0",
