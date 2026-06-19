@@ -211,6 +211,9 @@
     get arrowLength() {
       return Math.max(12, this.lineWidth * 3.25);
     },
+    get arrowInset() {
+      return this.arrowLength * 0.68;
+    },
     get arrowMode() {
       return Editor.prefs["editor.lineArrows"];
     },
@@ -234,8 +237,8 @@
       var perpendicularY = directionX;
       var baseX = tipX - length * directionX;
       var baseY = tipY - length * directionY;
-      var notchX = tipX - length * 0.68 * directionX;
-      var notchY = tipY - length * 0.68 * directionY;
+      var notchX = tipX - this.arrowInset * directionX;
+      var notchY = tipY - this.arrowInset * directionY;
 
       ctx.beginPath();
       ctx.moveTo(tipX, tipY);
@@ -254,6 +257,9 @@
     _stroke(ctx, x, y, w, h) {
       var start;
       var end;
+      var shaftStart;
+      var shaftEnd;
+      var shaftInset;
 
       if (this._dir == 1) {
         start = [x, y + h];
@@ -269,10 +275,24 @@
         end = [x + w, y + h];
       }
 
+      shaftStart = start;
+      shaftEnd = end;
+      shaftInset = Math.min(
+        this.arrowInset,
+        Math.hypot(end[0] - start[0], end[1] - start[1]) /
+          (this.arrowMode == "both" ? 2 : 1)
+      );
+      if (this.arrowMode == "end" || this.arrowMode == "both") {
+        shaftEnd = this._pointToward(end, start, shaftInset);
+      }
+      if (this.arrowMode == "both") {
+        shaftStart = this._pointToward(start, end, shaftInset);
+      }
+
       ctx.beginPath();
-      ctx.lineCap = "round";
-      ctx.moveTo(start[0], start[1]);
-      ctx.lineTo(end[0], end[1]);
+      ctx.lineCap = this.arrowMode == "none" ? "round" : "butt";
+      ctx.moveTo(shaftStart[0], shaftStart[1]);
+      ctx.lineTo(shaftEnd[0], shaftEnd[1]);
       ctx.stroke();
       ctx.fillStyle = ctx.strokeStyle;
       if (this.arrowMode == "end" || this.arrowMode == "both") {
@@ -281,6 +301,13 @@
       if (this.arrowMode == "both") {
         this._arrowHead(ctx, start[0], start[1], end[0], end[1]);
       }
+    },
+    _pointToward(point, target, distance) {
+      var angle = Math.atan2(target[1] - point[1], target[0] - point[0]);
+      return [
+        point[0] + distance * Math.cos(angle),
+        point[1] + distance * Math.sin(angle)
+      ];
     },
     start(x, y, w, h) {
       this.__proto__.start.bind(this)(x, y, w, h, "linecanvas");
