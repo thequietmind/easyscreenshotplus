@@ -6,8 +6,16 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-06-19
+
 ### Added
 
+- Editable annotations that can be selected, repositioned, restyled, and
+  deleted after creation.
+- Resize handles for rectangles and ellipses.
+- Editable endpoints for lines and arrows.
+- Optional arrowheads on one or both ends of lines.
+- Retained editing support for pencil strokes and text.
 - Configurable alternate toolbar action for Command-click on macOS and
   Ctrl-click on Windows or Linux, defaulting to visible-region capture.
 - Configurable screenshot filename prefix.
