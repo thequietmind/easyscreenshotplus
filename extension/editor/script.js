@@ -209,7 +209,7 @@
     _rect: null,
     _startxy: null,
     get arrowLength() {
-      return Math.max(10, this.lineWidth * 3);
+      return Math.max(12, this.lineWidth * 3.25);
     },
     get arrowMode() {
       return Editor.prefs["editor.lineArrows"];
@@ -226,19 +226,30 @@
     },
     _arrowHead(ctx, tipX, tipY, fromX, fromY) {
       var angle = Math.atan2(tipY - fromY, tipX - fromX);
-      var spread = Math.PI / 6;
       var length = this.arrowLength;
+      var halfWidth = Math.max(6, this.lineWidth * 1.65);
+      var directionX = Math.cos(angle);
+      var directionY = Math.sin(angle);
+      var perpendicularX = -directionY;
+      var perpendicularY = directionX;
+      var baseX = tipX - length * directionX;
+      var baseY = tipY - length * directionY;
+      var notchX = tipX - length * 0.68 * directionX;
+      var notchY = tipY - length * 0.68 * directionY;
 
+      ctx.beginPath();
       ctx.moveTo(tipX, tipY);
       ctx.lineTo(
-        tipX - length * Math.cos(angle - spread),
-        tipY - length * Math.sin(angle - spread)
+        baseX + halfWidth * perpendicularX,
+        baseY + halfWidth * perpendicularY
       );
-      ctx.moveTo(tipX, tipY);
+      ctx.lineTo(notchX, notchY);
       ctx.lineTo(
-        tipX - length * Math.cos(angle + spread),
-        tipY - length * Math.sin(angle + spread)
+        baseX - halfWidth * perpendicularX,
+        baseY - halfWidth * perpendicularY
       );
+      ctx.closePath();
+      ctx.fill();
     },
     _stroke(ctx, x, y, w, h) {
       var start;
@@ -259,16 +270,17 @@
       }
 
       ctx.beginPath();
+      ctx.lineCap = "round";
       ctx.moveTo(start[0], start[1]);
       ctx.lineTo(end[0], end[1]);
+      ctx.stroke();
+      ctx.fillStyle = ctx.strokeStyle;
       if (this.arrowMode == "end" || this.arrowMode == "both") {
         this._arrowHead(ctx, end[0], end[1], start[0], start[1]);
       }
       if (this.arrowMode == "both") {
         this._arrowHead(ctx, start[0], start[1], end[0], end[1]);
       }
-      ctx.stroke();
-      ctx.closePath();
     },
     start(x, y, w, h) {
       this.__proto__.start.bind(this)(x, y, w, h, "linecanvas");

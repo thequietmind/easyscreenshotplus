@@ -223,21 +223,22 @@ li.container > ul {
 #button-lineArrows li[data-value="end"] .line-arrow-icon::after,
 #button-lineArrows li[data-value="both"] .line-arrow-icon::after,
 #button-lineArrows li[data-value="both"] .line-arrow-icon::before {
-  border-right: 2px solid #FFFFFF;
-  border-top: 2px solid #FFFFFF;
+  border-bottom: 4px solid transparent;
+  border-left: 7px solid #FFFFFF;
+  border-top: 4px solid transparent;
   content: "";
-  height: 6px;
+  height: 0;
   position: absolute;
-  right: -1px;
+  right: -2px;
   top: -5px;
-  transform: rotate(45deg);
-  width: 6px;
+  width: 0;
 }
 
 #button-lineArrows li[data-value="both"] .line-arrow-icon::before {
-  left: -1px;
+  border-left: none;
+  border-right: 7px solid #FFFFFF;
+  left: -2px;
   right: auto;
-  transform: rotate(-135deg);
 }
 
 #button-fontSize {
