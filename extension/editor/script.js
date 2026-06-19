@@ -489,7 +489,7 @@ var Editor = {
   buttons: {},
   prefs: {
     "editor.lineWidth": 6,
-    "editor.lineArrows": "none",
+    "editor.lineArrows": "end",
     "editor.fontSize": 18,
     "editor.color": "#FF0000"
   },
