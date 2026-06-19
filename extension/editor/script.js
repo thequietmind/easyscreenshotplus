@@ -84,10 +84,11 @@
         this._dir = 4;
       this._ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
       this._rect = [x, y, w, h];
-      var dx = Math.min(this.lineWidth, x);
-      var dy = this.lineWidth;
-      var dw = Math.min(x + w + this.lineWidth, this._origRect[2]) - x + dx;
-      var dh = Math.min(y + h + this.lineWidth, this._origRect[3]) - y + dy;
+      var padding = this.drawingPadding;
+      var dx = Math.min(padding, x);
+      var dy = Math.min(padding, y);
+      var dw = w + dx + Math.min(padding, this._origRect[2] - x - w);
+      var dh = h + dy + Math.min(padding, this._origRect[3] - y - h);
       x += this._origRect[0];
       y += this._origRect[1];
       this._canvas.style.left = x - dx + "px";
@@ -124,6 +125,9 @@
     },
     get lineWidth() {
       return Editor.prefs["editor.lineWidth"];
+    },
+    get drawingPadding() {
+      return this.lineWidth;
     },
     set lineWidth(value) {
       if (!isNaN(value)) {
@@ -204,15 +208,64 @@
     _origRect: null,
     _rect: null,
     _startxy: null,
+    get arrowLength() {
+      return Math.max(10, this.lineWidth * 3);
+    },
+    get arrowMode() {
+      return Editor.prefs["editor.lineArrows"];
+    },
+    set arrowMode(value) {
+      if (["none", "end", "both"].indexOf(value) >= 0) {
+        chrome.storage.local.set({
+          "editor.lineArrows": value
+        });
+      }
+    },
+    get drawingPadding() {
+      return this.lineWidth + this.arrowLength;
+    },
+    _arrowHead(ctx, tipX, tipY, fromX, fromY) {
+      var angle = Math.atan2(tipY - fromY, tipX - fromX);
+      var spread = Math.PI / 6;
+      var length = this.arrowLength;
+
+      ctx.moveTo(tipX, tipY);
+      ctx.lineTo(
+        tipX - length * Math.cos(angle - spread),
+        tipY - length * Math.sin(angle - spread)
+      );
+      ctx.moveTo(tipX, tipY);
+      ctx.lineTo(
+        tipX - length * Math.cos(angle + spread),
+        tipY - length * Math.sin(angle + spread)
+      );
+    },
     _stroke(ctx, x, y, w, h) {
-      ctx.beginPath();
-      var dir = this._dir;
-      if (dir == 1 || dir == 3) {
-        ctx.moveTo(x, y + h);
-        ctx.lineTo(x + w, y);
+      var start;
+      var end;
+
+      if (this._dir == 1) {
+        start = [x, y + h];
+        end = [x + w, y];
+      } else if (this._dir == 2) {
+        start = [x + w, y + h];
+        end = [x, y];
+      } else if (this._dir == 3) {
+        start = [x + w, y];
+        end = [x, y + h];
       } else {
-        ctx.moveTo(x, y);
-        ctx.lineTo(x + w, y + h);
+        start = [x, y];
+        end = [x + w, y + h];
+      }
+
+      ctx.beginPath();
+      ctx.moveTo(start[0], start[1]);
+      ctx.lineTo(end[0], end[1]);
+      if (this.arrowMode == "end" || this.arrowMode == "both") {
+        this._arrowHead(ctx, end[0], end[1], start[0], start[1]);
+      }
+      if (this.arrowMode == "both") {
+        this._arrowHead(ctx, start[0], start[1], end[0], end[1]);
       }
       ctx.stroke();
       ctx.closePath();
@@ -690,6 +743,20 @@
             }
           }
         }),
+        lineArrows: new BarItem({
+          id: "lineArrows",
+          _refresh() {
+            Array.prototype.forEach.call(this._ele.querySelectorAll("li"), function(li) {
+              li.classList[li.dataset.value == Line.arrowMode ? "add" : "remove"]("current");
+            });
+          },
+          click(evt) {
+            var option = evt.target.closest("li[data-value]");
+            if (option && this._ele.contains(option)) {
+              Line.arrowMode = option.dataset.value;
+            }
+          }
+        }),
         fontSize: new BarItem({
           id: "fontSize",
           _popup: FontSelect,
@@ -852,6 +919,7 @@
     },
     prefs: {
       "editor.lineWidth": 6,
+      "editor.lineArrows": "none",
       "editor.fontSize": 18,
       "editor.color": "#FF0000"
     },
@@ -928,7 +996,8 @@
     _setupButtons() {
       // Define floatbar types to avoid repetition
       var floatbars = {
-        line: ["lineWidth", "color"],
+        stroke: ["lineWidth", "color"],
+        line: ["lineWidth", "lineArrows", "color"],
         text: ["fontSize", "color"]
       };
       // Generate buttons
@@ -943,7 +1012,7 @@
         rectangle: new Button({
           id: "rectangle",
           key: "R",
-          floatbar: floatbars.line
+          floatbar: floatbars.stroke
         }),
         line: new Button({
           id: "line",
@@ -953,12 +1022,12 @@
         pencil: new Button({
           id: "pencil",
           key: "F",
-          floatbar: floatbars.line
+          floatbar: floatbars.stroke
         }),
         circle: new Button({
           id: "circle",
           key: "E",
-          floatbar: floatbars.line
+          floatbar: floatbars.stroke
         }),
         text: new Button({
           id: "text",

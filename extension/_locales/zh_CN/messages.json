@@ -59,6 +59,9 @@
   "editor_lineWidth_tooltip": {
     "message": "线条粗细"
   },
+  "editor_lineArrows_tooltip": {
+    "message": "箭头"
+  },
   "editor_fontSize_tooltip": {
     "message": "文字大小"
   },

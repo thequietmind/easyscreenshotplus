@@ -178,6 +178,68 @@ li.container > ul {
   width: 42px;
 }
 
+#button-lineArrows {
+  margin-left: 5px;
+}
+
+#button-lineArrows > ul {
+  display: flex;
+  height: 22px;
+}
+
+#button-lineArrows li {
+  background-color: rgba(28, 34, 49, 0.65);
+  background-image: none !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.18);
+  width: 34px;
+}
+
+#button-lineArrows li:first-of-type {
+  border-radius: 3px 0 0 3px;
+}
+
+#button-lineArrows li:last-of-type {
+  border-radius: 0 3px 3px 0;
+  border-right: none;
+}
+
+#button-lineArrows li:hover {
+  background-color: rgba(72, 82, 104, 0.85);
+}
+
+#button-lineArrows li.current {
+  background-color: #3070C7;
+}
+
+.line-arrow-icon {
+  border-top: 2px solid #FFFFFF;
+  display: block;
+  left: 7px;
+  position: absolute;
+  top: 10px;
+  width: 20px;
+}
+
+#button-lineArrows li[data-value="end"] .line-arrow-icon::after,
+#button-lineArrows li[data-value="both"] .line-arrow-icon::after,
+#button-lineArrows li[data-value="both"] .line-arrow-icon::before {
+  border-right: 2px solid #FFFFFF;
+  border-top: 2px solid #FFFFFF;
+  content: "";
+  height: 6px;
+  position: absolute;
+  right: -1px;
+  top: -5px;
+  transform: rotate(45deg);
+  width: 6px;
+}
+
+#button-lineArrows li[data-value="both"] .line-arrow-icon::before {
+  left: -1px;
+  right: auto;
+  transform: rotate(-135deg);
+}
+
 #button-fontSize {
   background-position: -124px 0, 0 0;
   color: #FFFFFF;

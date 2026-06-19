@@ -59,6 +59,9 @@
   "editor_lineWidth_tooltip": {
     "message": "Line Width"
   },
+  "editor_lineArrows_tooltip": {
+    "message": "Arrowheads"
+  },
   "editor_fontSize_tooltip": {
     "message": "Font Size"
   },

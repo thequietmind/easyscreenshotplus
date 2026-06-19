@@ -59,6 +59,9 @@
   "editor_lineWidth_tooltip": {
     "message": "Ширина линии"
   },
+  "editor_lineArrows_tooltip": {
+    "message": "Наконечники стрелок"
+  },
   "editor_fontSize_tooltip": {
     "message": "Размер шрифта"
   },
