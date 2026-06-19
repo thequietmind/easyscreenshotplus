@@ -23,6 +23,9 @@
   "editor_color_tooltip": {
     "message": "Choose a color"
   },
+  "editor_select_tooltip": {
+    "message": "Select and edit annotations"
+  },
   "editor_crop_tooltip": {
     "message": "Crop the snapshot"
   },

@@ -23,6 +23,9 @@
   "editor_color_tooltip": {
     "message": "选择填充颜色"
   },
+  "editor_select_tooltip": {
+    "message": "选择并编辑标注"
+  },
   "editor_crop_tooltip": {
     "message": "裁剪"
   },

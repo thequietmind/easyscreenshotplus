@@ -68,6 +68,24 @@ body {
   background-position: -20px 0, 0 0;
 }
 
+#button-select {
+  background-image: url(./img/tool-select.svg),
+                    url(./img/button.png) !important;
+  background-position: center, 0 0;
+  background-size: 20px 20px, auto;
+}
+
+#button-select:hover {
+  background-image: url(./img/tool-select.svg),
+                    url(./img/button-hover.png) !important;
+}
+
+#button-select.current,
+#button-select.current:hover {
+  background-image: url(./img/tool-select.svg),
+                    url(./img/button-active.png) !important;
+}
+
 #button-rectangle {
   background-position: -40px 0, 0 0;
 }
@@ -296,6 +314,11 @@ li.container > ul {
   margin: 78px auto 21px;
 }
 
+#selection {
+  position: absolute;
+  z-index: 1;
+}
+
 #blurcanvas, #pencilcanvas, #rectcanvas, #linecanvas, #circcanvas, #textcanvas, #textinput {
   position: absolute;
 }
@@ -314,6 +337,10 @@ li.container > ul {
 
 #display.pencilcanvas, #pencilcanvas {
   cursor: url(./img/cursor-pencil.png) 2 2, -moz-grab;
+}
+
+#display.selectcanvas {
+  cursor: default;
 }
 
 #textcanvas {

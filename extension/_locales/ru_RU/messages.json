@@ -23,6 +23,9 @@
   "editor_color_tooltip": {
     "message": "Выберите цвет"
   },
+  "editor_select_tooltip": {
+    "message": "Выбрать и изменить аннотации"
+  },
   "editor_crop_tooltip": {
     "message": "Обрежьте снимок"
   },
