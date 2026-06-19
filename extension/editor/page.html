@@ -4,13 +4,15 @@
         <meta charset="utf-8">
         <title></title>
         <script src="../common/script.js"></script>
+        <script src="./annotations.js"></script>
         <script src="./script.js"></script>
         <link href="../common/style.css" rel="stylesheet" type="text/css"/>
         <link href="./style.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
         <ul id="toolbar">
-            <li id="button-crop">
+            <li id="button-select">
+            </li><li id="button-crop">
             </li><li id="button-rectangle">
             </li><li id="button-circle">
             </li><li id="button-line">
@@ -25,6 +27,8 @@
         <ul id="floatbar">
             <li id="button-lineWidth" class="container">
                 <ul><li value="3"></li><li value="6"></li><li value="9"></li></ul>
+            </li><li id="button-lineArrows" class="container">
+                <ul><li data-value="none"><span class="line-arrow-icon"></span></li><li data-value="end"><span class="line-arrow-icon"></span></li><li data-value="both"><span class="line-arrow-icon"></span></li></ul>
             </li><li id="button-fontSize">
             </li><li id="button-color"><div id="color"></div></li>
         </ul>
@@ -115,6 +119,7 @@
             <li data-color="#330033">
         </ul>
         <canvas id="display"></canvas>
+        <canvas id="selection"></canvas>
         <textarea id="textinput"></textarea>
     </body>
 </html>
